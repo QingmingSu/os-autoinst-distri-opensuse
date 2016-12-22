@@ -939,6 +939,7 @@ sub load_online_migration_tests() {
 }
 
 sub load_fips_tests_core() {
+    loadtest "console/consoletest_setup";
     loadtest "fips/openssl/openssl_fips_alglist";
     loadtest "fips/openssl/openssl_fips_hash";
     loadtest "fips/openssl/openssl_fips_cipher";
@@ -954,6 +955,7 @@ sub load_fips_tests_core() {
 }
 
 sub load_fips_tests_web() {
+    loadtest "console/consoletest_setup";
     loadtest "console/curl_https";
     loadtest "console/wget_https";
     loadtest "console/w3m_https";
@@ -965,6 +967,7 @@ sub load_fips_tests_web() {
 }
 
 sub load_fips_tests_misc() {
+    loadtest "console/consoletest_setup";
     loadtest "console/aide_check";
     loadtest "console/journald_fss";
     loadtest "fips/curl_fips_rc4_seed";
@@ -977,6 +980,10 @@ sub load_fips_tests_crypt() {
     loadtest "console/yast2_dm_crypt";
     loadtest "console/cryptsetup";
     loadtest "console/ecryptfs_fips";
+}
+
+sub load_fips_tests_rsyslog() {
+    loadtest "console/rsyslog";
 }
 
 sub prepare_target() {
@@ -1069,8 +1076,6 @@ elsif (get_var("FIPS_TS")) {
     }
     else {
         loadtest "boot/boot_to_desktop";
-        # Turn off packagekit, setup $serialdev permission and etc
-        loadtest "console/consoletest_setup";
         if (check_var("FIPS_TS", "core")) {
             load_fips_tests_core;
         }
@@ -1082,6 +1087,9 @@ elsif (get_var("FIPS_TS")) {
         }
         elsif (check_var("FIPS_TS", "crypt")) {
             load_fips_tests_crypt;
+        }
+        elsif (check_var("FIPS_TS", "rsyslog")) {
+            load_fips_tests_rsyslog;
         }
     }
 }
